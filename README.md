@@ -183,6 +183,7 @@ This plan aims to build a strong foundation in programming, data science, machin
 ##### Skills Learned
 <details>
 <summary> Expand/Collapse Skills form learning path</summary>
+   
 ##### Phase 1: Programming Fundamentals
 
 - **Python** 
