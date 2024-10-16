@@ -13,7 +13,7 @@ def insert_cabinet(cabinet,to_insert):
     cabinet.insert(insert_location,to_insert)  
     return(cabinet)
 
-'Measuring Algorithm Efficiency'
+'Measuring Algorithm Efficiency in time'
 cabinet = [8,4,6,1,2,5,3,7]
 def insertion_sort(cabinet):  
     newcabinet = []  
@@ -36,7 +36,7 @@ end = timer()
 print(end - start)
 
 '''
-Counting steps
+Counting steps is more efficient as its not hardware dependent
 '''
 def insert_cabinet(cabinet,to_insert):  
     check_location = len(cabinet) - 1  
@@ -64,3 +64,195 @@ cabinet = [8,4,6,1,2,5,3,7]
 stepcounter = 0
 sortedcabinet = insertion_sort(cabinet)
 print("steps",stepcounter)
+
+'''
+Comparing insert-sort to other growth rates
+'''
+import math
+import random
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def check_steps(size_of_cabinet):
+ cabinet = [int(1000 * random.random()) for i in range(size_of_cabinet)]
+ global stepcounter
+ stepcounter = 0
+ sortedcabinet = insertion_sort(cabinet)
+ return(stepcounter)
+
+random.seed(5040)
+xs = list(range(1,100))
+ys = [check_steps(x) for x in xs]
+xs_exp = [math.exp(x) for x in xs]
+
+
+plt.plot(xs,ys)
+plt.title('Steps Required for Insertion Sort for Random Cabinets')
+plt.xlabel('Number of Files in Random Cabinet')
+plt.ylabel('Steps Required to Sort Cabinet by Insertion Sort')
+"plt.show()"
+
+xs_squared = [x**2 for x in xs]
+xs_threehalves = [x**1.5 for x in xs]
+xs_cubed = [x**3 for x in xs]
+plt.plot(xs,ys)
+axes = plt.gca()
+axes.set_ylim([np.min(ys),np.max(ys) + 140])
+plt.plot(xs,xs_exp)
+plt.plot(xs,xs)
+plt.plot(xs,xs_squared)
+plt.plot(xs,xs_cubed)
+plt.plot(xs,xs_threehalves)
+plt.title('Comparing Insertion Sort to Other Growth Rates')
+plt.xlabel('Number of Files in Random Cabinet')
+plt.ylabel('Steps Required to Sort Cabinet')
+"plt.show()"
+
+'''
+Merge Sort
+'''
+
+'''
+Merge
+'''
+
+def merging(left,right):
+    newcabinet = []
+    while(min(len(left),len(right)) > 0):
+        if left[0] > right[0]:
+            to_insert = right.pop(0)
+            newcabinet.append(to_insert)
+        elif left[0] <= right[0]:
+            to_insert = left.pop(0)
+            newcabinet.append(to_insert)
+    if(len(left) > 0):
+        for i in left:
+            newcabinet.append(i)
+    if(len(right)>0):
+        for i in right:
+            newcabinet.append(i)
+    return(newcabinet)
+left = [1,3,4,4,5,7,8,9]
+right = [2,4,6,7,8,8,10,12,13,14]
+newcab=merging(left,right)
+
+print(newcab)
+
+'''
+From merging to sorting
+'''
+import math
+def mergesort_two_elements(cabinet):
+    newcabinet = []
+    if(len(cabinet) == 1):
+        newcabinet = cabinet
+    else:
+        left = cabinet[:math.floor(len(cabinet)/2)]
+        right = cabinet[math.floor(len(cabinet)/2):]
+        newcabinet = merging(left,right)
+    return(newcabinet)
+
+def mergesort_four_elements(cabinet):
+    newcabinet = []
+    if(len(cabinet) == 1):
+        newcabinet = cabinet
+    else:
+        left = mergesort_two_elements(cabinet[:math.floor(len(cabinet)/2)])
+        right = mergesort_two_elements(cabinet[math.floor(len(cabinet)/2):])
+        newcabinet = merging(left,right)
+    return(newcabinet)
+cabinet = [2,6,4,1]
+newcabinet = mergesort_four_elements(cabinet)
+
+
+
+def mergesort(cabinet):
+    newcabinet = []
+    if(len(cabinet) == 1):
+        newcabinet = cabinet
+    else:
+        left = mergesort(cabinet[:math.floor(len(cabinet)/2)])
+        right = mergesort(cabinet[math.floor(len(cabinet)/2):])
+        newcabinet = merging(left,right)
+    return(newcabinet)
+
+cabinet = [4,1,3,2,6,3,18,2,9,7,3,1,2.5,-9]
+newcabinet = mergesort(cabinet)
+print(newcabinet)
+
+
+'''Putting it all together'''
+def merging(left,right):
+    newcabinet = []
+    while(min(len(left),len(right)) > 0):
+        if left[0] > right[0]:
+            to_insert = right.pop(0)
+            newcabinet.append(to_insert)
+        elif left[0] <= right[0]:
+            to_insert = left.pop(0)
+            newcabinet.append(to_insert)
+    if(len(left) > 0):
+        for i in left:
+            newcabinet.append(i)
+
+    if(len(right) > 0):
+        for i in right:
+            newcabinet.append(i)
+    return(newcabinet)
+
+def mergesort(cabinet):
+    newcabinet = []
+    if(len(cabinet) == 1):
+        newcabinet=cabinet
+    else:
+        left = mergesort(cabinet[:math.floor(len(cabinet)/2)])
+        right = mergesort(cabinet[math.floor(len(cabinet)/2):])
+        newcabinet = merging(left,right)
+    return(newcabinet)
+cabinet = [4,1,3,2,6,3,18,2,9,7,3,1,2.5,-9]
+newcabinet=mergesort(cabinet)
+print(newcabinet)
+
+"Sleep sort"
+
+import threading
+from time import sleep
+
+def sleep_sort(i):
+    sleep(i)
+    global sortedlist
+    sortedlist.append(i)
+    return(i)
+items = [2, 4, 5, 2, 1, 7]
+sortedlist = []
+ignore_result = [threading.Thread(target = sleep_sort, args = (i,)).start() \
+for i in items]
+'''There may never be a practical use for sleep sort, even on a sinking
+ship'''
+
+"From Sorting to Searching"
+"Binary Search"
+
+import math
+sortedcabinet = [1,2,3,4,5,6,7,8,9,10]
+def binarysearch(sorted_cabinet,looking_for):
+    guess = math.floor(len(sorted_cabinet)/2)
+    upperbound = len(sorted_cabinet)
+    lowerbound = 0
+    while(abs(sorted_cabinet[guess] - looking_for) > 0.0001):
+        if(sorted_cabinet[guess] > looking_for):
+            upperbound = guess
+            guess = math.floor((guess + lowerbound)/2)
+        if(sorted_cabinet[guess] < looking_for):
+            lowerbound = guess
+            guess = math.floor((guess + upperbound)/2)
+    return(guess)
+
+def inverse_sin(number):
+    domain = [x * math.pi/10000 - math.pi/2 for x in list(range(0,10000))]
+    the_range = [math.sin(x) for x in domain]
+    result = domain[binarysearch(the_range,number)]
+    return(result)  
+
+
